@@ -3,7 +3,7 @@ import React from 'react'
 
 const navbar = () => {
   return (
-    <nav className='flex justify-around bg-slate-800 text-center items-center text-slate-300  py-2 h-16'>
+    <nav className='flex justify-around  bg-gray-800 text-center  items-center text-slate-300  py-2 h-16'>
       <div className="logo   flex items-center py-8 px-2 ">
         <img src="/public/favicon.png" alt="" className='w-8 h-8 rounded-full animate-pulse' />
         <span className=' text-slate-300 mx-1 cursor-pointer hover:font-extrabold hover:text-white font-bold text-xl'>ACTION PLAN</span>

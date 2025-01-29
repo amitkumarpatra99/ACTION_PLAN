@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import { v4 as uuidv4 } from 'uuid';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -19,13 +21,14 @@ function App() {
 
   const saveToLS = (params) => {
     localStorage.setItem("todos", JSON.stringify(todos))
+   
   }
 
   const toggleFinished = (e) => {
     setshowFinished(!showFinished)
   }
 
-  // const notify = () => toast("Wow so easy !");
+
 
 
   const handleEdit = (e, id) => {
@@ -36,6 +39,7 @@ function App() {
     });
     setTodos(newTodos)
     saveToLS()
+
   }
 
   const handleDelete = (e, id) => {
@@ -44,13 +48,24 @@ function App() {
     });
     setTodos(newTodos)
     saveToLS()
-    alert("Task Deleted Successfully");
+
+    toast.success('🦄 TO-DO Deleted Successfully', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
   }
 
   const handleAdd = () => {
     setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }])
     setTodo("")
     saveToLS()
+
   }
 
   const handleChange = (e) => {
@@ -72,15 +87,33 @@ function App() {
   return (
     < >
       <Navbar />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition="Bounce"
+      />
+      {/* Same as */}
+      <ToastContainer />
+
+
+
       <div className="mx-3 md:container md:mx-auto my-5 rounded-es-[80px]  rounded-[10px]  p-5 bg-[#4C7B8B] text-white min-h-[80vh] md:w-[80%]">
         <h1 className='font-semibold text-center text-2xl'> ACTION PLAN - Your Daily Life Task List 💭 </h1>
         <div className="addTodo my-5 flex flex-col gap-4">
           <h2 className='text-2xl font-sans'>Add a Task</h2>
           <div className="flex gap-3 items-center  text-center">
 
-            <input onChange={handleChange} value={todo} type="text" className=' outline-blue-800  bg-slate-300 rounded-full w-3/4 h-10 text-black px-5 py-1' />
+            <input onChange={handleChange} value={todo} type="text" className=' outline-blue-800  bg-gray-600 rounded-full w-3/4 h-10 text-white px-5 py-1' />
 
-            <button onClick={handleAdd} disabled={todo.length <= 3} type="button" className="text-white h-10 text-center bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Save</button>
+            <button onClick={handleAdd} disabled={todo.length <= 3} type="button" className="text-white h-10 text-center bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-800 dark:border-gray-700">Save</button>
 
           </div>
         </div>
@@ -105,11 +138,7 @@ function App() {
                 <button onClick={(e) => { handleDelete(e, item.id) }} type="button" className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                   Delete </button>
 
-                {/* <div>
-                  <button onClick={notify}>Notify !</button>
-                  <ToastContainer />
-                </div>
-                ); */}
+
 
               </div>
             </div>
@@ -117,6 +146,7 @@ function App() {
         </div>
 
       </div>
+
     </>
   )
 }
