@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
-// import { AiFillDelete } from "react-icons/ai";
 import { v4 as uuidv4 } from 'uuid';
 
 function App() {
@@ -26,7 +25,7 @@ function App() {
     setshowFinished(!showFinished)
   }
 
-
+  // const notify = () => toast("Wow so easy !");
 
 
   const handleEdit = (e, id) => {
@@ -45,6 +44,7 @@ function App() {
     });
     setTodos(newTodos)
     saveToLS()
+    alert("Task Deleted Successfully");
   }
 
   const handleAdd = () => {
@@ -72,22 +72,22 @@ function App() {
   return (
     < >
       <Navbar />
-      <div className="mx-3 md:container md:mx-auto my-5 rounded-3xl p-5 bg-[#155E95] text-white min-h-[80vh] md:w-[80%]">
-        <h1 className='font-bold text-center text-2xl'>ACTION PLAN- Your Daily Life Task List  </h1>
+      <div className="mx-3 md:container md:mx-auto my-5 rounded-es-[80px]  rounded-[10px]  p-5 bg-[#4C7B8B] text-white min-h-[80vh] md:w-[80%]">
+        <h1 className='font-semibold text-center text-2xl'> ACTION PLAN - Your Daily Life Task List 💭 </h1>
         <div className="addTodo my-5 flex flex-col gap-4">
-          <h2 className='text-2xl font-bold'>Add a Task</h2>
-          <div className="flex gap-3 items-center text-center">
+          <h2 className='text-2xl font-sans'>Add a Task</h2>
+          <div className="flex gap-3 items-center  text-center">
 
             <input onChange={handleChange} value={todo} type="text" className=' outline-blue-800  bg-slate-300 rounded-full w-3/4 h-10 text-black px-5 py-1' />
 
-            <button onClick={handleAdd} disabled={todo.length <= 3} type="button" className="text-white h-10 bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Save</button>
+            <button onClick={handleAdd} disabled={todo.length <= 3} type="button" className="text-white h-10 text-center bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Save</button>
 
           </div>
         </div>
         <input className='my-4' id='show' onChange={toggleFinished} type="checkbox" checked={showFinished} />
         <label className='mx-2' htmlFor="show">Show Finished</label>
-        <div className='h-[1px] bg-black opacity-15 w-[90%] mx-auto my-2'></div>
-        <h2 className='text-2xl font-bold'>Your Tasks</h2>
+        <div className='h-[1px] bg-black opacity-80 w-full mx-auto my-2'></div>
+        <h2 className='text-2xl font-semibold'>Your Tasks</h2>
         <div className="todos">
           {todos.length === 0 && <div className='m-5'>No Todos to display</div>}
           {todos.map(item => {
@@ -104,6 +104,12 @@ function App() {
 
                 <button onClick={(e) => { handleDelete(e, item.id) }} type="button" className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                   Delete </button>
+
+                {/* <div>
+                  <button onClick={notify}>Notify !</button>
+                  <ToastContainer />
+                </div>
+                ); */}
 
               </div>
             </div>
