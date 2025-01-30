@@ -21,15 +21,12 @@ function App() {
 
   const saveToLS = (params) => {
     localStorage.setItem("todos", JSON.stringify(todos))
-   
+
   }
 
   const toggleFinished = (e) => {
     setshowFinished(!showFinished)
   }
-
-
-
 
   const handleEdit = (e, id) => {
     let t = todos.filter(i => i.id === id)
