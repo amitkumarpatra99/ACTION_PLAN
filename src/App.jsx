@@ -46,7 +46,7 @@ function App() {
     setTodos(newTodos)
     saveToLS()
 
-    toast.success('🦄 TO-DO Deleted Successfully', {
+    toast.success('✔️ TO-DO Deleted Successfully', {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -102,7 +102,7 @@ function App() {
 
 
 
-      <div className="mx-3 md:container md:mx-auto my-5 rounded-es-[80px]  rounded-[10px]  p-5 bg-[#4C7B8B] text-white min-h-[80vh] md:w-[80%]">
+      <div className="mx-3 md:container md:mx-auto my-5 rounded-es-[80px]  rounded-[10px]  p-5  border-2 border-black text-white min-h-[80vh] md:w-[80%]">
         <h1 className='font-semibold text-center text-2xl'> ACTION PLAN - Your Daily Life Task List 💭 </h1>
         <div className="addTodo my-5 flex flex-col gap-4">
           <h2 className='text-2xl font-sans'>Add a Task</h2>
