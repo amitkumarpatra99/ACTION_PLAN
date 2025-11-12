@@ -1,151 +1,271 @@
-import { useState, useEffect } from 'react'
-import Navbar from './components/Navbar'
-import { v4 as uuidv4 } from 'uuid';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState, useEffect } from "react";
+import Navbar from "./components/Navbar";
+import { v4 as uuidv4 } from "uuid";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// 🧠 React Icons
+import { FaPlus, FaTrash, FaEdit, FaCalendarAlt, FaTasks } from "react-icons/fa";
 
 function App() {
+  const [todo, setTodo] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [todos, setTodos] = useState([]);
+  const [showFinished, setShowFinished] = useState(true);
 
-  const [todo, setTodo] = useState("")
-  const [todos, setTodos] = useState([])
-  const [showFinished, setshowFinished] = useState(true)
-
+  // 🧠 Load todos from localStorage
   useEffect(() => {
-    let todoString = localStorage.getItem("todos")
-    if (todoString) {
-      let todos = JSON.parse(localStorage.getItem("todos"))
-      setTodos(todos)
-    }
-  }, [])
+    const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
+    setTodos(savedTodos);
+  }, []);
 
+  // ⏰ Reminder system
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      todos.forEach((task) => {
+        if (!task.isCompleted && task.dueDate) {
+          const due = new Date(task.dueDate);
+          const diff = due - now;
 
-  const saveToLS = (params) => {
-    localStorage.setItem("todos", JSON.stringify(todos))
+          if (diff > 0 && diff <= 60 * 60 * 1000) {
+            toast.info(`⏰ Reminder: "${task.todo}" is due soon!`, {
+              position: "top-right",
+              autoClose: 4000,
+              theme: "colored",
+            });
+          }
 
-  }
+          if (diff < 0 && !task.remindedOverdue) {
+            toast.error(`⚠️ Task overdue: "${task.todo}"`, {
+              position: "top-right",
+              autoClose: 4000,
+              theme: "colored",
+            });
+            task.remindedOverdue = true;
+            saveToLS();
+          }
+        }
+      });
+    }, 60000);
 
-  const toggleFinished = (e) => {
-    setshowFinished(!showFinished)
-  }
+    return () => clearInterval(interval);
+  }, [todos]);
+
+  const saveToLS = (updatedTodos = todos) => {
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+  };
+
+  const toggleFinished = () => setShowFinished(!showFinished);
 
   const handleEdit = (e, id) => {
-    let t = todos.filter(i => i.id === id)
-    setTodo(t[0].todo)
-    let newTodos = todos.filter(item => {
-      return item.id !== id
-    });
-    setTodos(newTodos)
-    saveToLS()
-
-  }
+    const t = todos.find((i) => i.id === id);
+    setTodo(t.todo);
+    setDueDate(t.dueDate || "");
+    setTodos(todos.filter((item) => item.id !== id));
+    saveToLS();
+  };
 
   const handleDelete = (e, id) => {
-    let newTodos = todos.filter(item => {
-      return item.id !== id
-    });
-    setTodos(newTodos)
-    saveToLS()
-
-    toast.success('✔️ TO-DO Deleted Successfully', {
+    const newTodos = todos.filter((item) => item.id !== id);
+    setTodos(newTodos);
+    saveToLS();
+    toast.success("🗑️ Task Deleted!", {
       position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
+      autoClose: 2000,
+      theme: "colored",
     });
-  }
+  };
 
   const handleAdd = () => {
-    setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }])
-    setTodo("")
-    saveToLS()
+    if (todo.trim().length <= 3) {
+      toast.warn("⚠️ Task must be at least 4 characters", {
+        position: "top-right",
+        autoClose: 2000,
+        theme: "colored",
+      });
+      return;
+    }
 
-  }
-
-  const handleChange = (e) => {
-    setTodo(e.target.value)
-  }
+    const newTask = {
+      id: uuidv4(),
+      todo,
+      isCompleted: false,
+      dueDate,
+      remindedOverdue: false,
+    };
+    const newTodos = [...todos, newTask];
+    setTodos(newTodos);
+    setTodo("");
+    setDueDate("");
+    saveToLS(newTodos);
+    toast.success("✅ Task Added!", {
+      position: "top-right",
+      autoClose: 1500,
+      theme: "colored",
+    });
+  };
 
   const handleCheckbox = (e) => {
-    let id = e.target.name;
-    let index = todos.findIndex(item => {
-      return item.id === id;
-    })
-    let newTodos = [...todos];
-    newTodos[index].isCompleted = !newTodos[index].isCompleted;
-    setTodos(newTodos)
-    saveToLS()
-  }
+    const id = e.target.name;
+    const newTodos = todos.map((item) =>
+      item.id === id ? { ...item, isCompleted: !item.isCompleted } : item
+    );
+    setTodos(newTodos);
+    saveToLS(newTodos);
+  };
 
+  const isOverdue = (date) => {
+    if (!date) return false;
+    return new Date(date) < new Date();
+  };
 
   return (
-    < >
+    <>
       <Navbar />
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition="Bounce"
-      />
-      {/* Same as */}
       <ToastContainer />
 
+      {/* 🌌 Royal Blue Background */}
+      <div
+        className="flex flex-col items-center min-h-screen px-4 sm:px-6 md:px-10 py-24 pt-32 text-white bg-gradient-to-br from-[#0a0c2a] via-[#0a2f7b] to-[#0f66d0]"
+      >
+        {/* 🧊 Glass Card */}
+        <div className="w-full max-w-4xl backdrop-blur-2xl rounded-3xl border border-white/20 bg-white/10 p-6 sm:p-8 shadow-[0_8px_32px_rgba(31,38,135,0.4)]">
+          <h1 className="font-extrabold text-3xl md:text-4xl text-center mb-8 tracking-wide bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center justify-center gap-3">
+            <FaTasks className="text-blue-400" />
+            Action Planner
+          </h1>
 
+          {/* ➕ Add Task Section */}
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-8">
+            <div className="relative w-full lg:w-[45%]">
+              <input
+                onChange={(e) => setTodo(e.target.value)}
+                value={todo}
+                type="text"
+                placeholder="Write your next task..."
+                className="w-full px-5 py-3 pl-12 rounded-full bg-white/20 placeholder-gray-200 text-white focus:ring-2 focus:ring-blue-400 outline-none backdrop-blur-md"
+              />
+              <FaTasks className="absolute left-4 top-3.5 text-blue-300" />
+            </div>
 
-      <div className="mx-3 md:container md:mx-auto my-5 rounded-es-[80px]  rounded-[10px]  p-5  border-2 border-black text-white min-h-[80vh] md:w-[80%]">
-        <h1 className='font-semibold text-center text-2xl'> ACTION PLAN - Your Daily Life Task List 💭 </h1>
-        <div className="addTodo my-5 flex flex-col gap-4">
-          <h2 className='text-2xl font-sans'>Add a Task</h2>
-          <div className="flex gap-3 items-center  text-center">
+            <div className="relative w-full lg:w-[35%]">
+              <input
+                onChange={(e) => setDueDate(e.target.value)}
+                value={dueDate}
+                type="datetime-local"
+                className="w-full px-5 py-3 pl-12 rounded-full bg-white/20 text-white focus:ring-2 focus:ring-blue-400 outline-none backdrop-blur-md"
+              />
+              <FaCalendarAlt className="absolute left-4 top-3.5 text-blue-300" />
+            </div>
 
-            <input onChange={handleChange} value={todo} type="text" className=' outline-blue-800  bg-gray-600 rounded-full w-3/4 h-10 text-white px-5 py-1' />
+            <button
+              onClick={handleAdd}
+              disabled={todo.length <= 3}
+              className={`flex items-center justify-center gap-2 w-full lg:w-auto px-6 py-3 rounded-full font-semibold shadow-lg transition-all ${
+                todo.length > 3
+                  ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white hover:scale-105"
+                  : "bg-gray-400/50 text-gray-300 cursor-not-allowed"
+              }`}
+            >
+              <FaPlus /> Add
+            </button>
+          </div>
 
-            <button onClick={handleAdd} disabled={todo.length <= 3} type="button" className="text-white h-10 text-center bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-800 dark:border-gray-700">Save</button>
+          {/* 🔘 Show Finished */}
+          <div className="flex items-center gap-3 mb-4">
+            <input
+              id="show"
+              onChange={() => setShowFinished(!showFinished)}
+              type="checkbox"
+              checked={showFinished}
+              className="accent-blue-400 scale-125"
+            />
+            <label htmlFor="show" className="font-medium text-sm md:text-base">
+              Show Completed Tasks
+            </label>
+          </div>
 
+          {/* Divider */}
+          <div className="h-[1px] w-full mb-6 bg-white/30"></div>
+
+          {/* 🧾 Task List */}
+          <h2 className="text-xl font-semibold mb-3">Your Tasks</h2>
+          <div className="space-y-3">
+            {todos.length === 0 && (
+              <div className="text-gray-300 text-center py-4 italic">
+                No tasks yet — plan your goals like a pro!
+              </div>
+            )}
+
+            {todos.map(
+              (item) =>
+                (showFinished || !item.isCompleted) && (
+                  <div
+                    key={item.id}
+                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center rounded-2xl p-4 sm:p-5 bg-white/15 border border-white/20 backdrop-blur-xl hover:scale-[1.02] transition-all"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-2 w-full">
+                      <div className="flex items-center gap-3">
+                        <input
+                          name={item.id}
+                          onChange={handleCheckbox}
+                          type="checkbox"
+                          checked={item.isCompleted}
+                          className="scale-125 accent-green-400"
+                        />
+                        <span
+                          className={`text-base md:text-lg break-words ${
+                            item.isCompleted
+                              ? "line-through opacity-60"
+                              : "opacity-100"
+                          }`}
+                        >
+                          {item.todo}
+                        </span>
+                      </div>
+
+                      {item.dueDate && (
+                        <div
+                          className={`text-sm font-medium ${
+                            isOverdue(item.dueDate)
+                              ? "text-red-400"
+                              : "text-blue-300"
+                          }`}
+                        >
+                          <FaCalendarAlt className="inline mr-2 text-blue-400" />
+                          {new Date(item.dueDate).toLocaleString()}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex gap-3 mt-3 sm:mt-0">
+                      <button
+                        onClick={(e) => handleEdit(e, item.id)}
+                        className="flex items-center gap-2 px-4 py-2 text-xs md:text-sm rounded-full bg-gradient-to-r from-blue-500 to-blue-400 text-white hover:scale-105 transition-all"
+                      >
+                        <FaEdit /> Edit
+                      </button>
+                      <button
+                        onClick={(e) => handleDelete(e, item.id)}
+                        className="flex items-center gap-2 px-4 py-2 text-xs md:text-sm rounded-full bg-gradient-to-r from-red-600 to-pink-500 text-white hover:scale-105 transition-all"
+                      >
+                        <FaTrash /> Delete
+                      </button>
+                    </div>
+                  </div>
+                )
+            )}
           </div>
         </div>
-        <input className='my-4' id='show' onChange={toggleFinished} type="checkbox" checked={showFinished} />
-        <label className='mx-2' htmlFor="show">Show Finished</label>
-        <div className='h-[1px] bg-black opacity-80 w-full mx-auto my-2'></div>
-        <h2 className='text-2xl font-semibold'>Your Tasks</h2>
-        <div className="todos">
-          {todos.length === 0 && <div className='m-5'>No Todos to display</div>}
-          {todos.map(item => {
 
-            return (showFinished || !item.isCompleted) && <div key={item.id} className={"todo flex my-3 justify-between"}>
-              <div className='flex gap-5 items-center'>
-                <input name={item.id} onChange={handleCheckbox} type="checkbox" checked={item.isCompleted} id="" />
-                <div className={item.isCompleted ? "line-through" : ""}>{item.todo}</div>
-              </div>
-              <div className="buttons flex  h-full">
-                <button onClick={(e) => handleEdit(e, item.id)} type="button" className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-                  Edit</button>
-
-
-                <button onClick={(e) => { handleDelete(e, item.id) }} type="button" className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-                  Delete </button>
-
-
-
-              </div>
-            </div>
-          })}
-        </div>
-
+        {/* Footer */}
+        <footer className="text-xs sm:text-sm md:text-base mt-10 opacity-80 text-center">
+          Designed by <span className="font-semibold text-blue-300">Amit</span> 💡 | Built with ❤️ React + Tailwind
+        </footer>
       </div>
-
     </>
-  )
+  );
 }
 
-export default App
+export default App;
