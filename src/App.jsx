@@ -3,8 +3,6 @@ import Navbar from "./components/Navbar";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-// 🧠 React Icons
 import { FaPlus, FaTrash, FaEdit, FaCalendarAlt, FaTasks } from "react-icons/fa";
 
 function App() {
@@ -13,13 +11,11 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [showFinished, setShowFinished] = useState(true);
 
-  // 🧠 Load todos from localStorage
   useEffect(() => {
     const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
     setTodos(savedTodos);
   }, []);
 
-  // ⏰ Reminder system
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
@@ -48,7 +44,6 @@ function App() {
         }
       });
     }, 60000);
-
     return () => clearInterval(interval);
   }, [todos]);
 
@@ -86,7 +81,6 @@ function App() {
       });
       return;
     }
-
     const newTask = {
       id: uuidv4(),
       todo,
@@ -125,28 +119,27 @@ function App() {
       <Navbar />
       <ToastContainer />
 
-      {/* 🌌 Royal Blue Background */}
-      <div
-        className="flex flex-col items-center min-h-screen px-4 sm:px-6 md:px-10 py-24 pt-32 text-white bg-gradient-to-br from-[#0a0c2a] via-[#0a2f7b] to-[#0f66d0]"
-      >
+      {/* 🌌 Background */}
+      <div className="flex flex-col items-center min-h-screen px-3 sm:px-6 md:px-10 py-24 pt-28 text-white bg-gradient-to-br from-[#0a0c2a] via-[#0a2f7b] to-[#0f66d0] relative overflow-x-hidden">
+
         {/* 🧊 Glass Card */}
-        <div className="w-full max-w-4xl backdrop-blur-2xl rounded-3xl border border-white/20 bg-white/10 p-6 sm:p-8 shadow-[0_8px_32px_rgba(31,38,135,0.4)]">
-          <h1 className="font-extrabold text-3xl md:text-4xl text-center mb-8 tracking-wide bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center justify-center gap-3">
+        <div className="w-full max-w-4xl backdrop-blur-2xl rounded-3xl border border-white/20 bg-white/10 p-5 sm:p-8 shadow-[0_8px_32px_rgba(31,38,135,0.4)]">
+          <h1 className="font-extrabold text-2xl sm:text-3xl md:text-4xl text-center mb-8 tracking-wide bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center justify-center gap-3">
             <FaTasks className="text-blue-400" />
             Action Planner
           </h1>
 
           {/* ➕ Add Task Section */}
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-8">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-8 w-full">
             <div className="relative w-full lg:w-[45%]">
               <input
                 onChange={(e) => setTodo(e.target.value)}
                 value={todo}
                 type="text"
                 placeholder="Write your next task..."
-                className="w-full px-5 py-3 pl-12 rounded-full bg-white/20 placeholder-gray-200 text-white focus:ring-2 focus:ring-blue-400 outline-none backdrop-blur-md"
+                className="w-full px-5 py-3 pl-12 rounded-full bg-white/20 placeholder-gray-200 text-white focus:ring-2 focus:ring-blue-400 outline-none backdrop-blur-md text-sm sm:text-base"
               />
-              <FaTasks className="absolute left-4 top-3.5 text-blue-300" />
+              <FaTasks className="absolute left-4 top-3.5 text-blue-300 text-sm sm:text-base" />
             </div>
 
             <div className="relative w-full lg:w-[35%]">
@@ -154,15 +147,15 @@ function App() {
                 onChange={(e) => setDueDate(e.target.value)}
                 value={dueDate}
                 type="datetime-local"
-                className="w-full px-5 py-3 pl-12 rounded-full bg-white/20 text-white focus:ring-2 focus:ring-blue-400 outline-none backdrop-blur-md"
+                className="w-full px-5 py-3 pl-12 rounded-full bg-white/20 text-white focus:ring-2 focus:ring-blue-400 outline-none backdrop-blur-md text-sm sm:text-base"
               />
-              <FaCalendarAlt className="absolute left-4 top-3.5 text-blue-300" />
+              <FaCalendarAlt className="absolute left-4 top-3.5 text-blue-300 text-sm sm:text-base" />
             </div>
 
             <button
               onClick={handleAdd}
               disabled={todo.length <= 3}
-              className={`flex items-center justify-center gap-2 w-full lg:w-auto px-6 py-3 rounded-full font-semibold shadow-lg transition-all ${
+              className={`flex items-center justify-center gap-2 w-full lg:w-auto px-6 py-3 rounded-full font-semibold shadow-lg text-sm sm:text-base transition-all ${
                 todo.length > 3
                   ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white hover:scale-105"
                   : "bg-gray-400/50 text-gray-300 cursor-not-allowed"
@@ -172,7 +165,7 @@ function App() {
             </button>
           </div>
 
-          {/* 🔘 Show Finished */}
+          {/* Show Completed */}
           <div className="flex items-center gap-3 mb-4">
             <input
               id="show"
@@ -181,19 +174,20 @@ function App() {
               checked={showFinished}
               className="accent-blue-400 scale-125"
             />
-            <label htmlFor="show" className="font-medium text-sm md:text-base">
+            <label htmlFor="show" className="font-medium text-sm sm:text-base">
               Show Completed Tasks
             </label>
           </div>
 
-          {/* Divider */}
           <div className="h-[1px] w-full mb-6 bg-white/30"></div>
 
-          {/* 🧾 Task List */}
-          <h2 className="text-xl font-semibold mb-3">Your Tasks</h2>
+          {/* Task List */}
+          <h2 className="text-lg sm:text-xl font-semibold mb-3">
+            Your Tasks
+          </h2>
           <div className="space-y-3">
             {todos.length === 0 && (
-              <div className="text-gray-300 text-center py-4 italic">
+              <div className="text-gray-300 text-center py-4 italic text-sm sm:text-base">
                 No tasks yet — plan your goals like a pro!
               </div>
             )}
@@ -215,7 +209,7 @@ function App() {
                           className="scale-125 accent-green-400"
                         />
                         <span
-                          className={`text-base md:text-lg break-words ${
+                          className={`text-sm sm:text-base md:text-lg break-words ${
                             item.isCompleted
                               ? "line-through opacity-60"
                               : "opacity-100"
@@ -227,7 +221,7 @@ function App() {
 
                       {item.dueDate && (
                         <div
-                          className={`text-sm font-medium ${
+                          className={`text-xs sm:text-sm font-medium ${
                             isOverdue(item.dueDate)
                               ? "text-red-400"
                               : "text-blue-300"
@@ -242,13 +236,13 @@ function App() {
                     <div className="flex gap-3 mt-3 sm:mt-0">
                       <button
                         onClick={(e) => handleEdit(e, item.id)}
-                        className="flex items-center gap-2 px-4 py-2 text-xs md:text-sm rounded-full bg-gradient-to-r from-blue-500 to-blue-400 text-white hover:scale-105 transition-all"
+                        className="flex items-center gap-2 px-4 py-2 text-xs sm:text-sm rounded-full bg-gradient-to-r from-blue-500 to-blue-400 text-white hover:scale-105 transition-all"
                       >
                         <FaEdit /> Edit
                       </button>
                       <button
                         onClick={(e) => handleDelete(e, item.id)}
-                        className="flex items-center gap-2 px-4 py-2 text-xs md:text-sm rounded-full bg-gradient-to-r from-red-600 to-pink-500 text-white hover:scale-105 transition-all"
+                        className="flex items-center gap-2 px-4 py-2 text-xs sm:text-sm rounded-full bg-gradient-to-r from-red-600 to-pink-500 text-white hover:scale-105 transition-all"
                       >
                         <FaTrash /> Delete
                       </button>
@@ -260,8 +254,13 @@ function App() {
         </div>
 
         {/* Footer */}
-        <footer className="text-xs sm:text-sm md:text-base mt-10 opacity-80 text-center">
-          Designed by <span className="font-semibold text-blue-300">Amit</span> 💡 | Built with ❤️ React + Tailwind
+        <footer className="w-full fixed bottom-0 left-0 z-40 backdrop-blur-xl bg-transparent border-t border-white/10">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-center items-center px-4 py-3 text-center sm:text-left text-white/80">
+            <p className="text-xs sm:text-sm opacity-90">
+              © {new Date().getFullYear()}{" "}
+              <span className="font-semibold text-blue-400">Mr Patra</span> — All Rights Reserved
+            </p>
+          </div>
         </footer>
       </div>
     </>
