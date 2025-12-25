@@ -1,8 +1,47 @@
-# React + Vite
+# 📝 Full Stack Todo Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern **Full Stack Todo App** built using the **MERN Stack (MongoDB, Express, React, Node.js)** that helps users manage daily tasks efficiently with a clean UI and secure backend.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
+
+- ✅ User Authentication (Register / Login)
+- 📝 Create, Read, Update & Delete Todos (CRUD)
+- 🔒 JWT-based Authentication & Authorization
+- 📱 Fully Responsive UI
+- 🌙 Light & Dark Mode
+- ⚡ Fast and Scalable REST API
+- 📊 Real-time UI Updates
+- 🧠 Clean Folder Structure & Reusable Components
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+- React.js
+- Tailwind CSS
+- Axios
+- React Router DOM
+- Framer Motion
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT (JSON Web Token)
+- bcrypt.js
+
+### Tools
+- Git & GitHub
+- VS Code
+- Postman
+- MongoDB Atlas
+- Vercel / Render
+
+---
+
+git clone https://github.com/your-username/fullstack-todo-app.git
+cd fullstack-todo-app
