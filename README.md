@@ -64,8 +64,7 @@ Make sure you have **Node.js** installed on your system.
 
 ## 📷 Screenshots
 
-*(Add screenshots of your application here)*
-
+![Screenshot](/public/project.png)
 ---
 
 ## 📜 License
